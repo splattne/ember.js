@@ -1,4 +1,3 @@
-
 /**
 @module ember
 @submodule ember-views

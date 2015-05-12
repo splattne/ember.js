@@ -1057,12 +1057,7 @@ var View = CoreView.extend(
     @return {Ember.View} receiver
   */
   remove() {
-    // What we should really do here is wait until the end of the run loop
-    // to determine if the element has been re-appended to a different
-    // element.
-    // In the interim, we will just re-render if that happens. It is more
-    // important than elements get garbage collected.
-    if (!this.removedFromDOM) { this.destroyElement(); }
+    this.destroyElement();
 
     // Set flag to avoid future renders
     this._willInsert = false;

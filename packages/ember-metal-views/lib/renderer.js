@@ -229,13 +229,6 @@ Renderer.prototype.willDestroyElement = function (view) {
   }
 
   view._transitionTo('destroying', false);
-
-  var childViews = view.childViews;
-  if (childViews) {
-    for (var i = 0; i < childViews.length; i++) {
-      this.willDestroyElement(childViews[i]);
-    }
-  }
 };
 
 Renderer.prototype.didDestroyElement = function (view) {
