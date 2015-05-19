@@ -2,6 +2,7 @@ import EmberView from "ember-views/views/view";
 import run from "ember-metal/run_loop";
 import compile from "ember-template-compiler/system/compile";
 import { equalInnerHTML } from "htmlbars-test-helpers";
+import firstChildElement from "ember-htmlbars/tests/test-helpers/first-child-element";
 
 var view;
 
@@ -27,9 +28,9 @@ QUnit.test("disabled property can be set true", function() {
   });
   appendView(view);
 
-  equal(view.element.firstChild.hasAttribute('disabled'), true, 'attribute is output');
-  equal(view.element.firstChild.disabled, true,
-        'boolean property is set true');
+  let firstChild = firstChildElement(view.element);
+  ok(firstChild.hasAttribute('disabled'), 'attribute is output');
+  equal(firstChild.disabled, true, 'boolean property is set true');
 });
 
 QUnit.test("disabled property can be set false with a blank string", function() {
@@ -39,9 +40,9 @@ QUnit.test("disabled property can be set false with a blank string", function() 
   });
   appendView(view);
 
-  equal(view.element.firstChild.hasAttribute('disabled'), false, 'attribute is not output');
-  equal(view.element.firstChild.disabled, false,
-        'boolean property is set false');
+  let firstChild = firstChildElement(view.element);
+  equal(firstChild.hasAttribute('disabled'), false, 'attribute is output');
+  equal(firstChild.disabled, false, 'boolean property is set true');
 });
 
 QUnit.test("disabled property can be set false", function() {
@@ -51,10 +52,8 @@ QUnit.test("disabled property can be set false", function() {
   });
   appendView(view);
 
-  equalInnerHTML(view.element, '<input>',
-                 "attribute is not output");
-  equal(view.element.firstChild.disabled, false,
-        'boolean property is set false');
+  equalInnerHTML(view.element, '<input>', "attribute is not output");
+  equal(firstChildElement(view.element).disabled, false, 'boolean property is set false');
 });
 
 QUnit.test("disabled property can be set true with a string", function() {
@@ -64,9 +63,9 @@ QUnit.test("disabled property can be set true with a string", function() {
   });
   appendView(view);
 
-  equal(view.element.firstChild.hasAttribute('disabled'), true, 'attribute is output');
-  equal(view.element.firstChild.disabled, true,
-        'boolean property is set true');
+  let firstChild = firstChildElement(view.element);
+  equal(firstChild.hasAttribute('disabled'), true, 'attribute is output');
+  equal(firstChild.disabled, true, 'boolean property is set true');
 });
 
 QUnit.test("disabled attribute turns a value to a string", function() {
@@ -76,9 +75,9 @@ QUnit.test("disabled attribute turns a value to a string", function() {
   });
   appendView(view);
 
-  equal(view.element.firstChild.hasAttribute('disabled'), true, 'attribute is output');
-  equal(view.element.firstChild.disabled, true,
-        'boolean property is set true');
+  let firstChild = firstChildElement(view.element);
+  equal(firstChild.hasAttribute('disabled'), true, 'attribute is output');
+  equal(firstChild.disabled, true, 'boolean property is set true');
 });
 
 QUnit.test("disabled attribute preserves a blank string value", function() {
@@ -88,10 +87,8 @@ QUnit.test("disabled attribute preserves a blank string value", function() {
   });
   appendView(view);
 
-  equalInnerHTML(view.element, '<input>',
-                 "attribute is not output");
-  equal(view.element.firstChild.disabled, false,
-        'boolean property is set false');
+  equalInnerHTML(view.element, '<input>', "attribute is not output");
+  equal(firstChildElement(view.element).disabled, false, 'boolean property is set false');
 });
 
 }

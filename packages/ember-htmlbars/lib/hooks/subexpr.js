@@ -58,7 +58,7 @@ function labelsForHash(hash) {
   return out.join(" ");
 }
 
-function SubexprStream(params, hash, helper, label) {
+export function SubexprStream(params, hash, helper, label) {
   this.init(label);
   this.params = params;
   this.hash = hash;

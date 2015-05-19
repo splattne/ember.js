@@ -1,6 +1,7 @@
 import EmberView from "ember-views/views/view";
 import run from "ember-metal/run_loop";
 import compile from "ember-template-compiler/system/compile";
+import firstChildElement from "ember-htmlbars/tests/test-helpers/first-child-element";
 
 var view;
 
@@ -33,10 +34,10 @@ QUnit.test("maxlength sets the property and attribute", function() {
   });
 
   appendView(view);
-  equal(view.element.firstChild.maxLength, 5);
+  equal(firstChildElement(view.element).maxLength, 5);
 
   Ember.run(view, view.set, 'context.length', 1);
-  equal(view.element.firstChild.maxLength, 1);
+  equal(firstChildElement(view.element).maxLength, 1);
 });
 
 QUnit.test("quoted maxlength sets the property and attribute", function() {
@@ -46,14 +47,14 @@ QUnit.test("quoted maxlength sets the property and attribute", function() {
   });
 
   appendView(view);
-  equal(view.element.firstChild.maxLength, '5');
+  equal(firstChildElement(view.element).maxLength, '5');
 
   if (canSetFalsyMaxLength()) {
     Ember.run(view, view.set, 'context.length', null);
-    equal(view.element.firstChild.maxLength, 0);
+    equal(firstChildElement(view.element).maxLength, 0);
   } else {
     Ember.run(view, view.set, 'context.length', 1);
-    equal(view.element.firstChild.maxLength, 1);
+    equal(firstChildElement(view.element).maxLength, 1);
   }
 });
 

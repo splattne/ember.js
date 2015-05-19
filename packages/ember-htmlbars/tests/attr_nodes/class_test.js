@@ -2,6 +2,7 @@ import EmberView from "ember-views/views/view";
 import run from "ember-metal/run_loop";
 import compile from "ember-template-compiler/system/compile";
 import { equalInnerHTML } from "htmlbars-test-helpers";
+import firstChildElement from "ember-htmlbars/tests/test-helpers/first-child-element";
 
 var view;
 
@@ -36,7 +37,7 @@ QUnit.test("class renders before didInsertElement", function() {
   });
   appendView(view);
 
-  equal(view.element.firstChild.className, 'blue', "attribute is output");
+  equal(firstChildElement(view.element).className, 'blue', "attribute is output");
   equal(matchingElement.length, 1, 'element is in the DOM when didInsertElement');
 });
 
@@ -60,11 +61,11 @@ QUnit.test("class property is removed when updated with a null value", function(
   });
   appendView(view);
 
-  equal(view.element.firstChild.className, 'large', "attribute is output");
+  equal(firstChildElement(view.element).className, 'large', "attribute is output");
 
   run(view, view.set, 'context.class', null);
 
-  equal(view.element.firstChild.className, '', "attribute is removed");
+  equal(firstChildElement(view.element).className, '', "attribute is removed");
 });
 
 QUnit.test("class attribute concats bound values", function() {
@@ -74,7 +75,7 @@ QUnit.test("class attribute concats bound values", function() {
   });
   appendView(view);
 
-  strictEqual(view.element.firstChild.className, 'large blue round', 'classes are set');
+  strictEqual(firstChildElement(view.element).className, 'large blue round', 'classes are set');
 });
 
 if (isInlineIfEnabled) {
@@ -91,12 +92,12 @@ QUnit.test("class attribute accepts nested helpers, and updates", function() {
   });
   appendView(view);
 
-  strictEqual(view.element.firstChild.className, 'large blue no-shape', 'classes are set');
+  strictEqual(firstChildElement(view.element).className, 'large blue no-shape', 'classes are set');
 
   run(view, view.set, 'context.hasColor', false);
   run(view, view.set, 'context.hasShape', true);
 
-  strictEqual(view.element.firstChild.className, 'large  round', 'classes are updated');
+  strictEqual(firstChildElement(view.element).className, 'large  round', 'classes are updated');
 });
 
 }
@@ -110,11 +111,11 @@ QUnit.test("class attribute can accept multiple classes from a single value, and
   });
   appendView(view);
 
-  strictEqual(view.element.firstChild.className, 'large small', 'classes are set');
+  strictEqual(firstChildElement(view.element).className, 'large small', 'classes are set');
 
   run(view, view.set, 'context.size', 'medium');
 
-  strictEqual(view.element.firstChild.className, 'medium', 'classes are updated');
+  strictEqual(firstChildElement(view.element).className, 'medium', 'classes are updated');
 });
 
 QUnit.test("class attribute can grok concatted classes, and update", function() {
@@ -128,11 +129,11 @@ QUnit.test("class attribute can grok concatted classes, and update", function() 
   });
   appendView(view);
 
-  strictEqual(view.element.firstChild.className, 'btn-large pre-pre pre-post    whoop', 'classes are set');
+  strictEqual(firstChildElement(view.element).className, 'btn-large pre-pre pre-post    whoop', 'classes are set');
 
   run(view, view.set, 'context.prefix', '');
 
-  strictEqual(view.element.firstChild.className, 'btn-large -post    whoop', 'classes are updated');
+  strictEqual(firstChildElement(view.element).className, 'btn-large -post    whoop', 'classes are updated');
 });
 
 QUnit.test("class attribute stays in order", function() {
@@ -148,7 +149,7 @@ QUnit.test("class attribute stays in order", function() {
   run(view, view.set, 'context.showB', false);
   run(view, view.set, 'context.showB', 'b');
 
-  strictEqual(view.element.firstChild.className, 'r b a c', 'classes are in the right order');
+  strictEqual(firstChildElement(view.element).className, 'r b a c', 'classes are in the right order');
 });
 
 }

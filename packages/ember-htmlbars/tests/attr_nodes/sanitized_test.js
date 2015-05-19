@@ -5,6 +5,7 @@ import compile from "ember-template-compiler/system/compile";
 import { SafeString } from "ember-htmlbars/utils/string";
 import { runAppend, runDestroy } from "ember-runtime/tests/utils";
 import environment from "ember-metal/environment";
+import firstChildElement from "ember-htmlbars/tests/test-helpers/first-child-element";
 
 var view;
 
@@ -73,7 +74,7 @@ for (var i=0, l=badTags.length; i<l; i++) {
       });
       runAppend(view);
 
-      equal(view.element.firstChild.getAttribute(subject.attr),
+      equal(firstChildElement(view.element).getAttribute(subject.attr),
              "unsafe:javascript://example.com",
              "attribute is output");
     });
@@ -85,7 +86,7 @@ for (var i=0, l=badTags.length; i<l; i++) {
       });
       runAppend(view);
 
-      equal(view.element.firstChild.getAttribute(subject.attr),
+      equal(firstChildElement(view.element).getAttribute(subject.attr),
              "unsafe:javascript://example.com",
              "attribute is output");
     });
@@ -99,7 +100,7 @@ for (var i=0, l=badTags.length; i<l; i++) {
       try {
         runAppend(view);
 
-        equal(view.element.firstChild.getAttribute(subject.attr),
+        equal(firstChildElement(view.element).getAttribute(subject.attr),
                "javascript://example.com",
                "attribute is output");
       } catch(e) {
@@ -115,7 +116,7 @@ for (var i=0, l=badTags.length; i<l; i++) {
       });
       runAppend(view);
 
-      equal(view.element.firstChild.getAttribute(subject.attr),
+      equal(firstChildElement(view.element).getAttribute(subject.attr),
              "unsafe:javascript://example.com",
              "attribute is output");
     });

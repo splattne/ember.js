@@ -3,8 +3,9 @@ import getValue from "ember-htmlbars/hooks/get-value";
 import { get } from "ember-metal/property_get";
 import { isGlobal } from "ember-metal/path_cache";
 
-export default function buildComponentTemplate({ component, layout, isAngleBracket}, attrs, content) {
-  var blockToRender, tagName, meta;
+export default function buildComponentTemplate({ component, layout, isAngleBracket, tagName: _tagName }, attrs, content) {
+  let blockToRender, meta;
+  let tagName = _tagName;
 
   if (component === undefined) {
     component = null;
@@ -15,7 +16,7 @@ export default function buildComponentTemplate({ component, layout, isAngleBrack
     blockToRender = createLayoutBlock(layout.raw, yieldTo, content.self, component, attrs);
     meta = layout.raw.meta;
   } else if (content.templates && content.templates.default) {
-    blockToRender = createContentBlock(content.templates.default, content.scope, content.self, component);
+    blockToRender = createContentBlock(content.templates.default, content.scope, content.self, component || content.scope.view);
     meta = content.templates.default.meta;
   }
 
@@ -25,15 +26,21 @@ export default function buildComponentTemplate({ component, layout, isAngleBrack
     // If this is not a tagless component, we need to create the wrapping
     // element. We use `manualElement` to create a template that represents
     // the wrapping element and yields to the previous block.
-    if (tagName !== '') {
-      var attributes = normalizeComponentAttributes(component, isAngleBracket, attrs);
-      var elementTemplate = internal.manualElement(tagName, attributes);
+    if (tagName !== '' && !isAngleBracket) {
+      let attributes = normalizeComponentAttributes(component, isAngleBracket, attrs);
+      let elementTemplate = internal.manualElement(tagName, attributes);
       elementTemplate.meta = meta;
 
       blockToRender = createElementBlock(elementTemplate, blockToRender, component);
     } else {
       validateTaglessComponent(component);
     }
+  } else if (tagName) {
+    let attributes = normalizeStringAttrs(attrs, {}, !tagName.match(/-/));
+    let elementTemplate = internal.manualElement(tagName, attributes);
+    elementTemplate.meta = meta;
+
+    blockToRender = createFallbackBlock(elementTemplate, blockToRender, content.scope.view);
   }
 
   // tagName is one of:
@@ -96,6 +103,13 @@ function createElementBlock(template, yieldTo, component) {
   });
 }
 
+function createFallbackBlock(template, yieldTo, component) {
+  return blockFor(template, {
+    yieldTo: yieldTo,
+    options: { view: component }
+  });
+}
+
 function tagNameFor(view) {
   var tagName = view.tagName;
 
@@ -147,14 +161,7 @@ function normalizeComponentAttributes(component, isAngleBracket, attrs) {
   }
 
   if (isAngleBracket) {
-    for (var prop in attrs) {
-      let val = attrs[prop];
-      if (!val) { continue; }
-
-      if (typeof val === 'string' || val.isConcat) {
-        normalized[prop] = ['value', val];
-      }
-    }
+    normalizeStringAttrs(attrs, normalized, false);
   }
 
   if (attrs.id && getValue(attrs.id)) {
@@ -183,6 +190,19 @@ function normalizeComponentAttributes(component, isAngleBracket, attrs) {
       normalized.style = ['subexpr', '-concat', [existingStyle, hiddenStyle], ['separator', ' ']];
     } else {
       normalized.style = hiddenStyle;
+    }
+  }
+
+  return normalized;
+}
+
+function normalizeStringAttrs(attrs, normalized, includeNonString) {
+  for (var prop in attrs) {
+    let val = attrs[prop];
+    if (!val) { continue; }
+
+    if (typeof val === 'string' || val.isConcat || includeNonString) {
+      normalized[prop] = ['value', val];
     }
   }
 

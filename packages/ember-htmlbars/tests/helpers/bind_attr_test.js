@@ -15,6 +15,8 @@ import { runAppend, runDestroy } from "ember-runtime/tests/utils";
 import { SafeString } from "ember-htmlbars/utils/string";
 import { styleWarning } from "ember-htmlbars/morphs/attr-morph";
 import compile from "ember-template-compiler/system/compile";
+import firstChildElement from "ember-htmlbars/tests/test-helpers/first-child-element";
+
 var view;
 
 var originalLookup = Ember.lookup;
@@ -268,13 +270,15 @@ QUnit.test("should be able to bind class attribute with {{bind-attr}}", function
 
   runAppend(view);
 
-  equal(view.element.firstChild.className, 'bar', 'renders class');
+  let firstChild = firstChildElement(view.element);
+  equal(firstChild.className, 'bar', 'renders class');
 
   run(function() {
     set(view, 'foo', 'baz');
   });
 
-  equal(view.element.firstChild.className, 'baz', 'updates rendered class');
+  firstChild = firstChildElement(view.element);
+  equal(firstChild.className, 'baz', 'updates rendered class');
 });
 
 QUnit.test("should be able to bind unquoted class attribute with {{bind-attr}}", function() {
@@ -306,13 +310,14 @@ QUnit.test("should be able to bind class attribute via a truthy property with {{
 
   runAppend(view);
 
-  equal(view.element.firstChild.className, 'is-truthy', 'renders class');
+  let firstChild = firstChildElement(view.element);
+  equal(firstChild.className, 'is-truthy', 'renders class');
 
   run(function() {
     set(view, 'isNumber', 0);
   });
 
-  ok(view.element.firstChild.className !== 'is-truthy', 'removes class');
+  ok(firstChild.className !== 'is-truthy', 'removes class');
 });
 
 QUnit.test("should be able to bind class to view attribute with {{bind-attr}}", function() {
@@ -517,7 +522,8 @@ QUnit.test("should keep class in the order it appears in", function() {
 
   runAppend(view);
 
-  equal(view.element.firstChild.className, 'foo baz', 'classes are in expected order');
+  let firstChild = firstChildElement(view.element);
+  equal(firstChild.className, 'foo baz', 'classes are in expected order');
 });
 
 QUnit.test('should allow either quoted or unquoted values', function() {
@@ -587,7 +593,8 @@ QUnit.test("src attribute bound to undefined is empty", function() {
 
   runAppend(view);
 
-  ok(!view.element.firstChild.hasAttribute('src'), "src attribute is empty");
+  let firstChild = firstChildElement(view.element);
+  ok(!firstChild.hasAttribute('src'), "src attribute is empty");
 });
 
 QUnit.test("src attribute bound to null is not present", function() {
@@ -600,7 +607,8 @@ QUnit.test("src attribute bound to null is not present", function() {
 
   runAppend(view);
 
-  equal(view.element.firstChild.getAttribute('src'), null, "src attribute is empty");
+  let firstChild = firstChildElement(view.element);
+  equal(firstChild.getAttribute('src'), null, "src attribute is empty");
 });
 
 QUnit.test("src attribute will be cleared when the value is set to null or undefined", function() {
@@ -616,31 +624,36 @@ QUnit.test("src attribute will be cleared when the value is set to null or undef
 
   runAppend(view);
 
-  equal(view.element.firstChild.getAttribute('src'), 'one', "src attribute is present");
+  let firstChild = firstChildElement(view.element);
+  equal(firstChild.getAttribute('src'), 'one', "src attribute is present");
 
   run(function() {
     set(view, 'value', 'two');
   });
 
-  equal(view.element.firstChild.getAttribute('src'), 'two', "src attribute is present");
+  firstChild = firstChildElement(view.element);
+  equal(firstChild.getAttribute('src'), 'two', "src attribute is present");
 
   run(function() {
     set(view, 'value', null);
   });
 
-  equal(view.element.firstChild.getAttribute('src'), '', "src attribute is empty");
+  firstChild = firstChildElement(view.element);
+  equal(firstChild.getAttribute('src'), '', "src attribute is empty");
 
   run(function() {
     set(view, 'value', 'three');
   });
 
-  equal(view.element.firstChild.getAttribute('src'), 'three', "src attribute is present");
+  firstChild = firstChildElement(view.element);
+  equal(firstChild.getAttribute('src'), 'three', "src attribute is present");
 
   run(function() {
     set(view, 'value', undefined);
   });
 
-  equal(view.element.firstChild.getAttribute('src'), '', "src attribute is empty");
+  firstChild = firstChildElement(view.element);
+  equal(firstChild.getAttribute('src'), '', "src attribute is empty");
 });
 
 if (!EmberDev.runningProdBuild) {

@@ -6,6 +6,7 @@ import Renderer from "ember-metal-views/renderer";
 import { equalInnerHTML } from "htmlbars-test-helpers";
 import { domHelper as dom } from "ember-htmlbars/env";
 import { runAppend, runDestroy } from "ember-runtime/tests/utils";
+import firstChildElement from "ember-htmlbars/tests/test-helpers/first-child-element";
 
 var view, originalSetAttribute, setAttributeCalls, renderer;
 
@@ -73,11 +74,11 @@ if (Ember.FEATURES.isEnabled('ember-htmlbars-attribute-syntax')) {
     });
     runAppend(view);
 
-    equal(view.element.firstChild.getAttribute('data-name'), 'max', "precond - attribute is output");
+    equal(firstChildElement(view.element).getAttribute('data-name'), 'max', "precond - attribute is output");
 
     run(view, view.set, 'context.firstName', null);
 
-    equal(view.element.firstChild.getAttribute('data-name'), '', "attribute is output");
+    equal(firstChildElement(view.element).getAttribute('data-name'), '', "attribute is output");
   });
 
   QUnit.test("unquoted attributes are removed when value is null", function() {
@@ -87,11 +88,11 @@ if (Ember.FEATURES.isEnabled('ember-htmlbars-attribute-syntax')) {
     });
     runAppend(view);
 
-    equal(view.element.firstChild.getAttribute('data-name'), 'max', "precond - attribute is output");
+    equal(firstChildElement(view.element).getAttribute('data-name'), 'max', "precond - attribute is output");
 
     run(view, view.set, 'context.firstName', null);
 
-    ok(!view.element.firstChild.hasAttribute('data-name'), "attribute is removed output");
+    ok(!firstChildElement(view.element).hasAttribute('data-name'), "attribute is removed output");
   });
 
   QUnit.test("unquoted attributes that are null are not added", function() {
@@ -125,7 +126,7 @@ if (Ember.FEATURES.isEnabled('ember-htmlbars-attribute-syntax')) {
     });
     runAppend(view);
 
-    equal(view.element.firstChild.getAttribute('data-name'), '"" data-foo="blah"', "attribute is output");
+    equal(firstChildElement(view.element).getAttribute('data-name'), '"" data-foo="blah"', "attribute is output");
   });
 
   QUnit.test("path is output", function() {

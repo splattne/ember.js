@@ -1,6 +1,7 @@
 import EmberView from "ember-views/views/view";
 import run from "ember-metal/run_loop";
 import compile from "ember-template-compiler/system/compile";
+import firstChildElement from "ember-htmlbars/tests/test-helpers/first-child-element";
 
 var view;
 
@@ -26,8 +27,8 @@ QUnit.test("property is output", function() {
   });
   appendView(view);
 
-  equal(view.element.firstChild.tagName, 'INPUT', "input element is created");
-  equal(view.element.firstChild.value, "rick",
+  equal(firstChildElement(view.element).tagName, 'INPUT', "input element is created");
+  equal(firstChildElement(view.element).value, "rick",
         'property is set true');
 });
 
@@ -38,8 +39,8 @@ QUnit.test("string property is output", function() {
   });
   appendView(view);
 
-  equal(view.element.firstChild.tagName, 'INPUT', "input element is created");
-  equal(view.element.firstChild.value, "rick",
+  equal(firstChildElement(view.element).tagName, 'INPUT', "input element is created");
+  equal(firstChildElement(view.element).value, "rick",
         'property is set true');
 });
 
@@ -50,8 +51,8 @@ QUnit.test("blank property is output", function() {
   });
   appendView(view);
 
-  equal(view.element.firstChild.tagName, 'INPUT', "input element is created");
-  equal(view.element.firstChild.value, "",
+  equal(firstChildElement(view.element).tagName, 'INPUT', "input element is created");
+  equal(firstChildElement(view.element).value, "",
         'property is set true');
 });
 

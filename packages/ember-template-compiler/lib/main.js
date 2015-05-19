@@ -15,6 +15,7 @@ import TransformItemClass from "ember-template-compiler/plugins/transform-item-c
 import TransformComponentAttrsIntoMut from "ember-template-compiler/plugins/transform-component-attrs-into-mut";
 import TransformComponentCurlyToReadonly from "ember-template-compiler/plugins/transform-component-curly-to-readonly";
 import TransformAngleBracketComponents from "ember-template-compiler/plugins/transform-angle-bracket-components";
+import TransformTopLevelComponents from "ember-template-compiler/plugins/transform-top-level-components";
 
 // used for adding Ember.Handlebars.compile for backwards compat
 import "ember-template-compiler/compat";
@@ -30,6 +31,7 @@ registerPlugin('ast', TransformItemClass);
 registerPlugin('ast', TransformComponentAttrsIntoMut);
 registerPlugin('ast', TransformComponentCurlyToReadonly);
 registerPlugin('ast', TransformAngleBracketComponents);
+registerPlugin('ast', TransformTopLevelComponents);
 
 export {
   _Ember,

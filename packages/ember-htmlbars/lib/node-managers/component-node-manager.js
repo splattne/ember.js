@@ -170,6 +170,12 @@ ComponentNodeManager.prototype.render = function(_env, visitor) {
       this.block(env, [], undefined, this.renderNode, this.scope, visitor);
     }
 
+    // If the template has multiple root elements, treat it like a fragment
+    // (tagless) component.
+    if (this.isAngleBracket && !hasSingleRootElement(this.renderNode)) {
+      this.expectElement = false;
+    }
+
     var element = this.expectElement && this.renderNode.firstNode;
 
     handleLegacyRender(component, element);
@@ -197,6 +203,32 @@ export function handleLegacyRender(component, element) {
     node = renderNode;
   }
   node.setContent(new SafeString(content));
+}
+
+function hasSingleRootElement(renderNode) {
+  let lastElement;
+  let rootCount = 0;
+  let node = renderNode.firstNode;
+
+  while(node) {
+    let curr = node;
+    node = node.nextSibling;
+
+    // comment
+    if (curr.nodeType === 8) { continue; }
+
+    // text node with whitespace only
+    if (curr.nodeType === 3 && /^[\s]*$/.test(curr.textContent)) { continue; }
+
+    // has multiple root elements if we've been here before
+    if (rootCount++ > 0) { return false; }
+
+    if (curr.nodeType === 1) {
+      lastElement = curr;
+    }
+  }
+
+  return lastElement || false;
 }
 
 ComponentNodeManager.prototype.rerender = function(_env, attrs, visitor) {
